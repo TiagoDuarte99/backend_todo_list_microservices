@@ -1,0 +1,43 @@
+version: '3'
+services:
+  gateway:
+    build:
+      dockerfile: Dockerfile
+      context: ./gateway
+    ports:
+      - "3000:3000"
+    depends_on:
+      - users
+    restart: always
+    volumes:
+      - .:/app
+      - /app/users/node_modules
+
+  users:
+    build:
+      dockerfile: Dockerfile
+      context: ./users
+    container_name: users
+    ports:
+      - "3002:3002"
+    restart: always
+    volumes:
+      - .:/app
+      - /app/users/node_modules
+
+
+
+
+
+
+
+
+  nginx-proxy:
+    build:
+      dockerfile: Dockerfile
+      context: ./proxy
+    depends_on:
+      - users
+
+    ports:
+      - 80:80
