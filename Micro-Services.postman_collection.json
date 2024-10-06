@@ -1,0 +1,215 @@
+{
+	"info": {
+		"_postman_id": "7077833a-8450-434a-9e33-ab637bbf6da4",
+		"name": "Micro-Services",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "25316735",
+		"_collection_link": "https://universal-meadow-611345.postman.co/workspace/Team-Workspace~391fdd03-437f-458d-8bf3-7bf6bc059dd5/collection/25316735-7077833a-8450-434a-9e33-ab637bbf6da4?action=share&source=collection_link&creator=25316735"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "One User by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/users/one/2",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"users",
+								"one",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "One User by email",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/users/email/tiago@gmail.com",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"users",
+								"email",
+								"tiago@gmail.com"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{api_url}}/users/all?page=1",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"users",
+								"all"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auths",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"tiago_12@gmail.com\",\r\n    \"password\": \"abc/1234\",\r\n    \"confirmPassword\": \"Abc/1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}/auths/signup",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"auths",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Signin",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"const responseToken = pm.response.json();\r",
+									"var jsonToken = responseToken.token;\r",
+									"pm.collectionVariables.set(\"token\", jsonToken);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"tiago_10@gmail.com\",\r\n    \"password\": \"Abc/1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{api_url}}/auths/signin",
+							"host": [
+								"{{api_url}}"
+							],
+							"path": [
+								"auths",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "api_url",
+			"value": "http://localhost:3000",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MTQsImVtYWlsIjoidGlhZ29fMTBAZ21haWwuY29tIn0.KS6qVywXFcvv1ev2JiBvAjri3M6GeTwdAwP97fZDQak",
+			"type": "string"
+		}
+	]
+}

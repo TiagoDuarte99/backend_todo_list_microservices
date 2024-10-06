@@ -50,14 +50,17 @@ module.exports = (app) => {
 
   const update = async (id, user, userAuths) => {
     const idUser = userAuths.id.toString();
-    if (idUser !== id && userAuths.email !== 'admin@uplife.pt') throw new ForbiddenError('Não tem autorização para editar outro utilizador');
+
+    if (idUser !== id && idUser !== "1") {
+      throw new ForbiddenError('Não tem autorização para editar outro utilizador');
+    }
     if (user !== undefined && Object.keys(user).length > 0) {
       const resultado = await findOne({ id });
       if (!resultado) {
         throw new ValidationError('Utilizador não encontrado');
       }
 
-      const updateUser = {};
+      const updateUser = resultado;
       if (user.newEmail) {
         if (!isValidEmail(user.newEmail)) {
           throw new ValidationError('O email deve ser válido');
@@ -73,10 +76,15 @@ module.exports = (app) => {
 
       if (user.password && user.newPassword) {
         const oldPassword = user.password;
-        const { newPassword } = user;
-        if (!bcrypt.compareSync(oldPassword, resultado.password)) {
+        const newPassword  = user.newPassword;
+        if (!bcrypt.compareSync(oldPassword, updateUser.password)) {
           throw new ValidationError('Password antiga inválida');
         }
+
+        if (bcrypt.compareSync(newPassword, updateUser.password)) {
+          throw new ValidationError('Password antiga igual a nova');
+        }
+
         if (!isValidPassword(newPassword)) {
           throw new ValidationError('A password deve ter pelo menos 8 caracteres, uma letra maiúscula, uma minúscula, um dígito e um caractere especial');
         }
@@ -84,17 +92,17 @@ module.exports = (app) => {
         updateUser.password = newPasswordUser;
       }
 
-      if (user.lastTimeLogin !== undefined) {
+     if (user.hasOwnProperty("lastTimeLogin")) {
         updateUser.lastTimeLogin = user.lastTimeLogin;
       }
-
-      if (user.active !== null) {
+ 
+      if (user.hasOwnProperty("active")) {
         updateUser.active = user.active;
       }
 
       await app.db('users').where({ id }).update(updateUser);
 
-      const userAtualizado = await findOne({ id });
+      const userAtualizado = await findOneWithoutPassword({ id });
       return userAtualizado;
     }
     throw new ValidationError('Utilizador não foi atualizado');

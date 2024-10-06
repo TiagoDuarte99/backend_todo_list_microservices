@@ -1,6 +1,8 @@
 const request = require('supertest');
 const app = require('../../src/app');
 
+//TODO ACABAR ISTO
+
 beforeAll(async () => {
   await app.services.user.save({
     email: mail,

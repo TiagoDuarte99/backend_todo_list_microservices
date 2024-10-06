@@ -6,7 +6,7 @@ const app = require('../../src/app');
 const config = require('../../src/config');
 
 const mail = `u${Date.now()}@ipca.pt`;
-
+//TODO ACABAR ISTO
 const secret = config.privateKey;
 let user;
 /* let freelancer1; */

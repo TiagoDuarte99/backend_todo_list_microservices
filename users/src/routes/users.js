@@ -3,7 +3,7 @@ const ValidationError = require('../errors/validationError');
 module.exports = (app) => {
   const router = express.Router();
 
-  router.post('/', async (req, res, next) => {
+  router.post('/', async (req, res, next) => {2
     try {
       const result = await app.services.user.save(req.body);
 
