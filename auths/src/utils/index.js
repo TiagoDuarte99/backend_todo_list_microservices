@@ -1,9 +1,9 @@
-const bcrypt = require('bcrypt-nodejs');
+/* const bcrypt = require('bcrypt-nodejs'); */
 
-module.exports.getPasswdHash = (password) => {
+/* module.exports.getPasswdHash = (password) => {
   const salt = bcrypt.genSaltSync(10);
   return bcrypt.hashSync(password, salt);
-};
+}; */
 
 module.exports.isValidEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

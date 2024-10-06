@@ -1,4 +1,4 @@
-
+const bcrypt = require('bcrypt-nodejs');
 const ValidationError = require('../errors/validationError');
 const ForbiddenError = require('../errors/forbiddenError');
 const { getPasswdHash, isValidEmail, isValidPassword } = require('../utils');
@@ -38,26 +38,13 @@ module.exports = (app) => {
   };
 
   const save = async (user) => {
-    if (!user.email) {
-      throw new ValidationError('O email é um atributo obrigatório');
-    } else if (!isValidEmail(user.email)) {
-      throw new ValidationError('O email deve ser válido');
-    }
-
-    if (!user.password) {
-      throw new ValidationError('A password é obrigatória');
-    } else if (!isValidPassword(user.password)) {
-      throw new ValidationError('A password deve ter pelo menos 8 caracteres, uma letra maiúscula, uma minúscula, um dígito e um caractere especial');
-    }
-    if (user.password !== user.confirmPassword) {
-      throw new ValidationError('A password não corresponde à confirmação de password.');
-    }
     const userBD = await findOne({ email: user.email });
     if (userBD) throw new ValidationError('Email duplicado na Bd');
 
     const newUser = { ...user };
     delete newUser.confirmPassword;
     newUser.password = getPasswdHash(user.password);
+
     return app.db('users').insert(newUser, ['id', 'email']);
   };
 
@@ -111,7 +98,7 @@ module.exports = (app) => {
       return userAtualizado;
     }
     throw new ValidationError('Utilizador não foi atualizado');
-  }; //TODO ver isto do admin
+  }; // TODO ver isto do admin
 
   const deleteUser = async (id, userAuths) => {
     const idUser = userAuths.id.toString();
@@ -137,7 +124,7 @@ module.exports = (app) => {
       id,
     }).del();
     return userDeleted;
-  }; //TODO ver isto do admin
+  }; // TODO ver isto do admin
 
   return {
     findAll, save, findOne, update, deleteUser, findOneWithoutPassword,
