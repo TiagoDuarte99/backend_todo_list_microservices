@@ -76,7 +76,7 @@ module.exports = (app) => {
 
       if (user.password && user.newPassword) {
         const oldPassword = user.password;
-        const newPassword  = user.newPassword;
+        const newPassword = user.newPassword;
         if (!bcrypt.compareSync(oldPassword, updateUser.password)) {
           throw new ValidationError('Password antiga inválida');
         }
@@ -92,10 +92,10 @@ module.exports = (app) => {
         updateUser.password = newPasswordUser;
       }
 
-     if (user.hasOwnProperty("lastTimeLogin")) {
+      if (user.hasOwnProperty("lastTimeLogin")) {
         updateUser.lastTimeLogin = user.lastTimeLogin;
       }
- 
+
       if (user.hasOwnProperty("active")) {
         updateUser.active = user.active;
       }
@@ -110,22 +110,15 @@ module.exports = (app) => {
 
   const deleteUser = async (id, userAuths) => {
     const idUser = userAuths.id.toString();
-    if (idUser !== id && userAuths.email !== 'admin@uplife.pt') throw new ForbiddenError('Não tem autorização para editar outro utilizador');
+
+    if (idUser !== id && idUser !== "1") {
+      throw new ForbiddenError('Não tem autorização para editar outro utilizador');
+    }
 
     const resultado = await findOne({ id });
 
     if (!resultado) {
       throw new ValidationError('Utilizador não encontrado');
-    }
-
-    const free = await app.services.freelancer.findOne({ userId: id });
-    if (free) {
-      await app.db('freelancers').where({ userId: id }).delete();
-    }
-
-    const cli = await app.services.client.findOne({ userId: id });
-    if (cli) {
-      await app.db('clients').where({ userId: id }).delete();
     }
 
     const userDeleted = app.db('users').where({
