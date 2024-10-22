@@ -119,8 +119,12 @@ module.exports = (app) => {
   const deleteUser = async (id, userAuths) => {
     const idUser = userAuths.id.toString();
 
+    if (id == 1) {
+      throw new ForbiddenError('Não pode eliminar o admin');
+    }
+
     if (idUser !== id && idUser !== "1") {
-      throw new ForbiddenError('Não tem autorização para editar outro utilizador');
+      throw new ForbiddenError('Não tem autorização para eliminar outro utilizador');
     }
 
     const resultado = await findOne({ id });
