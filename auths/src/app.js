@@ -3,8 +3,10 @@ const consign = require('consign');
 const cors = require('cors');
 const knex = require('knex');
 const config = require('./config');
+const cookieParser = require('cookie-parser');
 
 app.use(cors(config.corsOptions));
+app.use(cookieParser());
 
 const knexfile = require('../knexfile');
 

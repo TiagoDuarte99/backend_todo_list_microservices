@@ -70,8 +70,16 @@ module.exports = (app) => {
         updateUser.email = user.newEmail;
       }
 
-      if (user.newPassword !== user.confirmNewPassword) {
-        throw new ValidationError('A nova password não corresponde à confirmação de password');
+      if (user.newPassword) {
+        if (!user.password) {
+          throw new ValidationError("A senha atual é obrigatória para alterar a senha.");
+        }
+        if (!user.confirmNewPassword) {
+          throw new ValidationError("O confirmar senha é obrigatório para alterar a senha.");
+        }
+        if (user.newPassword !== user.confirmNewPassword) {
+          throw new ValidationError('A nova password não corresponde à confirmação de password');
+        }
       }
 
       if (user.password && user.newPassword) {

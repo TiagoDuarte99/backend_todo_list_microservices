@@ -5,7 +5,7 @@ module.exports = (app) => {
 
   router.post('/signin', async (req, res, next) => {
     try {
-      const result = await app.services.auth.login(req.body);
+      const result = await app.services.auth.login(req.body, res);
 
       return res.status(200).json(result);
     } catch (err) {

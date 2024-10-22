@@ -46,6 +46,7 @@ module.exports = () => {
     if (user.active === false) {
       throw new ValidationError('Utilizador Inativado!');
     }
+    
 
     // Verifica se a senha está correta
     if (bcrypt.compareSync(reqUser.password, user.password)) {
