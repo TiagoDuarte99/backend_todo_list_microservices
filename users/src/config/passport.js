@@ -11,8 +11,7 @@ module.exports = (app) => {
   };
 
   const strategy = new Strategy(params, (payload, done) => {
-
-    const userIdToSearch = payload.userId || payload.id;
+    const userIdToSearch = payload.id;
     app.services.user.findOne({ id: userIdToSearch })
       .then((user) => {
         if (user) done(null, { ...payload });

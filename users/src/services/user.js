@@ -1,3 +1,4 @@
+/* eslint-disable eqeqeq */
 const bcrypt = require('bcrypt-nodejs');
 const ValidationError = require('../errors/validationError');
 const ForbiddenError = require('../errors/forbiddenError');
@@ -39,7 +40,7 @@ module.exports = (app) => {
 
   const save = async (user) => {
     const userBD = await findOne({ email: user.email });
-    if (userBD) throw new ValidationError('Email duplicado na Bd');
+    if (userBD) throw new ValidationError('Esse email ja está registado');
 
     const newUser = { ...user };
     delete newUser.confirmPassword;
@@ -51,7 +52,7 @@ module.exports = (app) => {
   const update = async (id, user, userAuths) => {
     const idUser = userAuths.id.toString();
 
-    if (idUser !== id && idUser !== "1") {
+    if (idUser !== id && idUser !== '1') {
       throw new ForbiddenError('Não tem autorização para editar outro utilizador');
     }
     if (user !== undefined && Object.keys(user).length > 0) {
@@ -72,10 +73,10 @@ module.exports = (app) => {
 
       if (user.newPassword) {
         if (!user.password) {
-          throw new ValidationError("A senha atual é obrigatória para alterar a senha.");
+          throw new ValidationError('A senha atual é obrigatória para alterar a senha.');
         }
         if (!user.confirmNewPassword) {
-          throw new ValidationError("O confirmar senha é obrigatório para alterar a senha.");
+          throw new ValidationError('O confirmar senha é obrigatório para alterar a senha.');
         }
         if (user.newPassword !== user.confirmNewPassword) {
           throw new ValidationError('A nova password não corresponde à confirmação de password');
@@ -84,7 +85,7 @@ module.exports = (app) => {
 
       if (user.password && user.newPassword) {
         const oldPassword = user.password;
-        const newPassword = user.newPassword;
+        const { newPassword } = user;
         if (!bcrypt.compareSync(oldPassword, updateUser.password)) {
           throw new ValidationError('Password antiga inválida');
         }
@@ -100,17 +101,19 @@ module.exports = (app) => {
         updateUser.password = newPasswordUser;
       }
 
-      if (user.hasOwnProperty("lastTimeLogin")) {
+      if (Object.prototype.hasOwnProperty.call(user, 'lastTimeLogin')) {
         updateUser.lastTimeLogin = user.lastTimeLogin;
       }
 
-      if (user.hasOwnProperty("active")) {
+      if (Object.prototype.hasOwnProperty.call(user, 'active')) {
         updateUser.active = user.active;
       }
+      console.log('updateUser', updateUser);
 
       await app.db('users').where({ id }).update(updateUser);
 
       const userAtualizado = await findOneWithoutPassword({ id });
+      console.log(userAtualizado);
       return userAtualizado;
     }
     throw new ValidationError('Utilizador não foi atualizado');
@@ -123,7 +126,7 @@ module.exports = (app) => {
       throw new ForbiddenError('Não pode eliminar o admin');
     }
 
-    if (idUser !== id && idUser !== "1") {
+    if (idUser !== id && idUser !== '1') {
       throw new ForbiddenError('Não tem autorização para eliminar outro utilizador');
     }
 

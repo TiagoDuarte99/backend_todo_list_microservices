@@ -1,8 +1,9 @@
+/* eslint-disable linebreak-style */
 const dotenv = require('dotenv');
 const path = require('path');
 
 dotenv.config({
-  path: path.resolve(__dirname, `.env.dev`),
+  path: path.resolve(__dirname, '.env.dev'),
 });
 
 module.exports = {
@@ -19,7 +20,7 @@ module.exports = {
     migrations: {
       directory: 'src/migrations',
     },
-    pool:{
+    pool: {
       min: 0,
       max: 50,
       propagateCreateError: false,
@@ -38,7 +39,7 @@ module.exports = {
     migrations: {
       directory: 'src/migrations',
     },
-    pool:{
+    pool: {
       min: 0,
       max: 50,
       propagateCreateError: false,
@@ -57,10 +58,11 @@ module.exports = {
     migrations: {
       directory: 'src/migrations',
     },
-    pool:{
+    pool: {
       min: 0,
       max: 50,
       propagateCreateError: false,
     },
   },
+// eslint-disable-next-line eol-last
 };

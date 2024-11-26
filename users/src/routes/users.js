@@ -1,15 +1,15 @@
 const express = require('express');
 const ValidationError = require('../errors/validationError');
+
 module.exports = (app) => {
   const router = express.Router();
 
-  router.post('/', async (req, res, next) => {2
+  router.post('/', async (req, res, next) => {
     try {
       const result = await app.services.user.save(req.body);
 
       return res.status(201).json(result[0]);
     } catch (err) {
-
       if (!res.headersSent) {
         if (err instanceof ValidationError) {
           return res.status(400).json({ error: err.message });
@@ -37,7 +37,7 @@ module.exports = (app) => {
       })
       .catch((err) => next(err));
   });
-  
+
   router.get('/email/:email', (req, res, next) => {
     app.services.user.findOne(req.params)
       .then((result) => {

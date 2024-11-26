@@ -4,10 +4,9 @@ const bcrypt = require('bcrypt-nodejs');
 const ValidationError = require('../errors/validationError');
 const { isValidEmail, isValidPassword } = require('../utils');
 
-const expiresIn = Date.now() + (24 * 60 * 60 * 1000);
-
 module.exports = () => {
   const createUser = async (user) => {
+    console.log(user);
     if (!user.email) {
       throw new ValidationError('O email é um atributo obrigatório');
     } else if (!isValidEmail(user.email)) {
@@ -46,17 +45,16 @@ module.exports = () => {
     if (user.active === false) {
       throw new ValidationError('Utilizador Inativado!');
     }
-    
-
     // Verifica se a senha está correta
     if (bcrypt.compareSync(reqUser.password, user.password)) {
       const payload = {
         id: user.id,
         email: user.email,
+        exp: Math.floor(Date.now() / 1000) + (24 * 60 * 60),
       };
 
       const privateKey = process.env.PRIVATE_KEY;
-      const token = jwt.encode(payload, privateKey, 'HS256', { expiresIn });
+      const token = jwt.encode(payload, privateKey, 'HS256');
       return { token, payload };
     }
     throw new ValidationError('Autenticação inválida!');
